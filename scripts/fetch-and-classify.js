@@ -8,12 +8,10 @@ const Anthropic = require('@anthropic-ai/sdk');
 const { createClient } = require('@supabase/supabase-js');
 const { sendEmail, breakingAlertHtml } = require('./email');
 
-// PIB RSS feeds — Lang=1 is English, Regid=3&reg=3 is All India
+// PIB RSS feed — Lang=1 English, Regid=3&reg=3 All India
+// ModId=6 is the main English all-ministry feed (others return 404)
 const PIB_RSS_FEEDS = [
-  'https://www.pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3&reg=3',  // Prime Minister's Office
-  'https://www.pib.gov.in/RssMain.aspx?ModId=2&Lang=1&Regid=3&reg=3',  // Ministry of External Affairs
-  'https://www.pib.gov.in/RssMain.aspx?ModId=3&Lang=1&Regid=3&reg=3',  // Ministry of Finance
-  'https://www.pib.gov.in/RssMain.aspx?ModId=14&Lang=1&Regid=3&reg=3', // Ministry of Defence
+  'https://www.pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3&reg=3',
 ];
 
 const IMPORTANCE_THRESHOLD = 7;
@@ -150,4 +148,5 @@ async function sendBreakingAlerts(supabase, item, result) {
   console.log(`Breaking alert sent to ${sent}/${subscribers.length} subscribers`);
 }
 
-main().catch(err => { console.error(err); process.exit(1); });
+// Force exit — Supabase realtime WebSocket keeps Node alive otherwise
+main().then(() => process.exit(0)).catch(err => { console.error(err); process.exit(1); });

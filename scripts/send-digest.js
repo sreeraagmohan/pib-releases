@@ -97,4 +97,5 @@ Write exactly 5 bullet points starting with •. Each bullet: one tight, factual
   return msg.content[0].text.trim();
 }
 
-main().catch(err => { console.error(err); process.exit(1); });
+// Force exit — Supabase realtime WebSocket keeps Node alive otherwise
+main().then(() => process.exit(0)).catch(err => { console.error(err); process.exit(1); });
