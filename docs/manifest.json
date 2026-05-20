@@ -2,8 +2,8 @@
   "name": "PIB Alerts",
   "short_name": "PIB",
   "description": "India government press releases — instant alerts and daily digest",
-  "start_url": "/PIB-Newsletter/",
-  "scope": "/PIB-Newsletter/",
+  "start_url": "/pib-releases/",
+  "scope": "/pib-releases/",
   "display": "minimal-ui",
   "background_color": "#0f172a",
   "theme_color": "#0f172a"
