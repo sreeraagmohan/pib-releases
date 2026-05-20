@@ -8,12 +8,12 @@ const Anthropic = require('@anthropic-ai/sdk');
 const { createClient } = require('@supabase/supabase-js');
 const { sendEmail, breakingAlertHtml } = require('./email');
 
-// Find feed URLs at pib.gov.in — look for the RSS icon on each ministry page.
+// PIB RSS feeds — Lang=1 is English, Regid=3&reg=3 is All India
 const PIB_RSS_FEEDS = [
-  'https://pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3',  // Prime Minister's Office
-  'https://pib.gov.in/RssMain.aspx?ModId=2&Lang=1&Regid=3',  // Ministry of External Affairs
-  'https://pib.gov.in/RssMain.aspx?ModId=3&Lang=1&Regid=3',  // Ministry of Finance
-  'https://pib.gov.in/RssMain.aspx?ModId=14&Lang=1&Regid=3', // Ministry of Defence
+  'https://www.pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3&reg=3',  // Prime Minister's Office
+  'https://www.pib.gov.in/RssMain.aspx?ModId=2&Lang=1&Regid=3&reg=3',  // Ministry of External Affairs
+  'https://www.pib.gov.in/RssMain.aspx?ModId=3&Lang=1&Regid=3&reg=3',  // Ministry of Finance
+  'https://www.pib.gov.in/RssMain.aspx?ModId=14&Lang=1&Regid=3&reg=3', // Ministry of Defence
 ];
 
 const IMPORTANCE_THRESHOLD = 7;
