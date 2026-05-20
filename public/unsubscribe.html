@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unsubscribe — PIB Alerts</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="unsub-page" id="unsub-page">
+    <p style="color: var(--muted); font-size: 15px;">Processing…</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/config.js"></script>
+  <script>
+    (async () => {
+      const container = document.getElementById('unsub-page');
+      const token = new URLSearchParams(window.location.search).get('token');
+
+      if (!token) {
+        container.innerHTML = `
+          <h1>Invalid link</h1>
+          <p>This unsubscribe link is missing a token. Please use the link from your email.</p>
+          <a href="/" class="btn">← Back to PIB Alerts</a>`;
+        return;
+      }
+
+      const db = supabase.createClient(
+        window.PIB_CONFIG.SUPABASE_URL,
+        window.PIB_CONFIG.SUPABASE_ANON_KEY,
+      );
+
+      const { error, count } = await db
+        .from('subscribers')
+        .delete({ count: 'exact' })
+        .eq('unsubscribe_token', token);
+
+      if (error || count === 0) {
+        container.innerHTML = `
+          <h1>Already unsubscribed</h1>
+          <p>This email address isn't in our list — you may have already unsubscribed.</p>
+          <a href="/" class="btn">← Back to PIB Alerts</a>`;
+        return;
+      }
+
+      container.innerHTML = `
+        <h1>You've been unsubscribed</h1>
+        <p>You won't receive any more emails from PIB Alerts. Changed your mind?</p>
+        <a href="/" class="btn">Re-subscribe</a>`;
+    })();
+  </script>
+</body>
+</html>

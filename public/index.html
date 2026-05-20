@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="We read every PIB press release and email you when something significant drops — plus an 8 PM evening digest." />
+  <title>PIB Alerts — India Press Release Digest</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+  <!-- Brand bar -->
+  <header class="brand-bar">
+    <span class="ashoka">☸</span>
+    <span class="brand-name">PIB Alerts</span>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="hero-eyebrow">Press Information Bureau · India</span>
+    <h1>The press releases<br>that <em>actually matter</em></h1>
+    <p>We read every PIB release and email you the moment something significant drops — foreign policy, trade, defence, major economic decisions. Plus an 8 PM digest of the day.</p>
+  </section>
+
+  <!-- Signup card -->
+  <div class="signup-wrap">
+    <div class="signup-card">
+      <h2>Subscribe — it's free</h2>
+      <form id="signup-form" novalidate>
+
+        <div class="field">
+          <label for="email">Your email</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+
+        <div class="preferences">
+          <label class="pref-label">
+            <input type="checkbox" name="digest" id="pref-digest" checked />
+            <span class="pref-text">
+              <strong>Evening digest</strong>
+              <span>5-point summary of the day's significant releases, at 8 PM IST.</span>
+            </span>
+          </label>
+          <label class="pref-label">
+            <input type="checkbox" name="breaking_alerts" id="pref-breaking" />
+            <span class="pref-text">
+              <strong>Breaking alerts</strong>
+              <span>Instant email the moment a high-importance release drops (score ≥ 7/10).</span>
+            </span>
+          </label>
+        </div>
+
+        <button type="submit" id="signup-submit">Subscribe</button>
+        <div class="msg" id="signup-msg"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Email preview mockup -->
+  <div class="preview-wrap">
+    <p class="section-label">What a breaking alert looks like</p>
+    <div class="email-mockup">
+      <div class="mockup-chrome">
+        <span class="mockup-dot"></span><span class="mockup-dot"></span><span class="mockup-dot"></span>
+        <span class="mockup-address">Gmail</span>
+      </div>
+      <div class="mockup-row-header">
+        <div class="mockup-avatar">P</div>
+        <div class="mockup-meta">
+          <span class="mockup-sender">PIB Alerts</span>
+          <span class="mockup-time">11:42 AM</span>
+        </div>
+      </div>
+      <div class="mockup-subject">⚡ PIB Alert — India-US sign landmark semiconductor partnership MoU</div>
+      <div class="mockup-body">
+        <p>India and the United States have signed a memorandum of understanding on semiconductor supply chain cooperation, committing to joint R&amp;D and preferential market access for chip manufacturers in both countries.</p>
+        <a href="#" onclick="return false" class="mockup-cta">Read full release →</a>
+      </div>
+      <div class="mockup-footer">
+        Press Information Bureau of India &nbsp;·&nbsp; <span class="mockup-unsub">Unsubscribe</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="features">
+    <div class="feature">
+      <div class="feature-stat">1–10</div>
+      <h3>Filtered</h3>
+      <p>We score every release based on our algorithm. Only releases with significant geopolitical or economic impact get through.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-stat">30m</div>
+      <h3>Near real-time</h3>
+      <p>Breaking alerts land in your inbox within 30 minutes of a release going live on PIB.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-stat">8 PM</div>
+      <h3>Evening brief</h3>
+      <p>A nightly 5-point summary of every release that mattered — curated, ready before bed.</p>
+    </div>
+  </div>
+
+  <!-- Latest digest -->
+  <div class="digest-section">
+    <p class="section-label">Latest Evening Brief</p>
+    <div class="digest-card">
+      <div id="digest-content"><p class="empty">Loading…</p></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/config.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

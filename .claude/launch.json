@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "pib-alerts",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "public", "--no-clipboard"],
+      "port": 3000
+    }
+  ]
+}

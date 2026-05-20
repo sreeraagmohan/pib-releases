@@ -1,0 +1,15 @@
+{
+  "name": "pib-alerts",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "fetch": "node scripts/fetch-and-classify.js",
+    "digest": "node scripts/send-digest.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.30.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "nodemailer": "^6.9.0",
+    "rss-parser": "^3.13.0"
+  }
+}
