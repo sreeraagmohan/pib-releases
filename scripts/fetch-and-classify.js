@@ -17,6 +17,7 @@ const PIB_RSS_FEEDS = [
 ];
 
 const IMPORTANCE_THRESHOLD = 7;
+const MAX_NEW_PER_RUN = 10; // cap per run — prevents long backlogs on first run
 
 async function main() {
   const parser = new Parser({ timeout: 10000 });
@@ -51,8 +52,10 @@ async function main() {
     .in('url', uniqueItems.map(i => i.link));
 
   const existingUrls = new Set((existing || []).map(e => e.url));
-  const newItems = uniqueItems.filter(i => !existingUrls.has(i.link));
-  console.log(`${uniqueItems.length} total, ${newItems.length} new`);
+  const newItems = uniqueItems
+    .filter(i => !existingUrls.has(i.link))
+    .slice(0, MAX_NEW_PER_RUN); // most recent first (feeds are newest-first)
+  console.log(`${uniqueItems.length} total, ${newItems.length} new (capped at ${MAX_NEW_PER_RUN})`);
 
   for (const item of newItems) {
     const result = await classify(anthropic, item);
@@ -97,11 +100,16 @@ Return ONLY valid JSON, no markdown:
 {"score":<1-10>,"category":"<foreign_policy|economic|defense|domestic|diplomatic|trade>","headline":"<one crisp sentence why it matters; empty string if score<7>"}`;
 
   try {
-    const msg = await anthropic.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 200,
-      messages: [{ role: 'user', content: prompt }],
-    });
+    const msg = await Promise.race([
+      anthropic.messages.create({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 200,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Claude timeout')), 15000)
+      ),
+    ]);
     return JSON.parse(msg.content[0].text.trim());
   } catch (e) {
     console.warn('Classification failed:', e.message);
