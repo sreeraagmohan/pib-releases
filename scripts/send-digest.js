@@ -85,12 +85,19 @@ async function generateDigest(anthropic, articles) {
     max_tokens: 600,
     messages: [{
       role: 'user',
-      content: `Write an evening briefing of today's significant Indian government press releases.
+      content: `You are writing the PIB Alerts evening briefing — a digest of significant Indian government press releases from today.
 
-Releases ranked by importance:
+Releases available (ranked by importance, scored 1–10):
 ${list}
 
-Write exactly 5 bullet points starting with •. Each bullet: one tight, factual sentence. Lead with the biggest geopolitical or economic story. State what happened and why it matters. No filler words. Total under 280 words — this is read on a phone.`,
+Rules:
+- Write UP TO 5 bullet points starting with •. If fewer releases are worth covering, write fewer — quality over quantity.
+- Each bullet: one tight, factual sentence. What happened and why it matters.
+- Only cover genuinely significant releases (score 6+). Skip routine or ceremonial ones.
+- If nothing today clears the bar for significance, respond with ONLY this single line (no bullets):
+  "Quiet day in New Delhi — nothing significant crossed the wire today."
+- Never ask for more information. Never explain what you'd need. Work only with what's given.
+- No filler, no preamble. Start directly with the first bullet or the quiet-day line.`,
     }],
   });
 
