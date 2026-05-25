@@ -16,18 +16,35 @@ function setupSignupForm() {
   const form = document.getElementById('signup-form');
   if (!form) return;
 
+  // Toggle topic picker visibility when topic brief checkbox changes
+  const topicToggle = document.getElementById('pref-topic');
+  const topicPicker = document.getElementById('topic-picker');
+  if (topicToggle && topicPicker) {
+    topicToggle.addEventListener('change', () => {
+      topicPicker.classList.toggle('visible', topicToggle.checked);
+    });
+  }
+
   form.addEventListener('submit', async e => {
     e.preventDefault();
 
     const email = document.getElementById('email').value.trim().toLowerCase();
     const digest = document.getElementById('pref-digest').checked;
     const breaking = document.getElementById('pref-breaking').checked;
+    const topicDigest = document.getElementById('pref-topic').checked;
+    const topics = topicDigest
+      ? [...document.querySelectorAll('input[name="topics"]:checked')].map(el => el.value)
+      : [];
     const btn = document.getElementById('signup-submit');
     const msg = document.getElementById('signup-msg');
 
     if (!email) return;
-    if (!digest && !breaking) {
+    if (!digest && !breaking && !topicDigest) {
       showMsg(msg, 'error', 'Please select at least one option.');
+      return;
+    }
+    if (topicDigest && topics.length === 0) {
+      showMsg(msg, 'error', 'Please choose at least one topic for your topic brief.');
       return;
     }
 
@@ -40,6 +57,8 @@ function setupSignupForm() {
       email,
       digest,
       breaking_alerts: breaking,
+      topic_digest: topicDigest,
+      topics,
     });
 
     btn.disabled = false;
@@ -58,6 +77,8 @@ function setupSignupForm() {
 
     form.reset();
     document.getElementById('pref-digest').checked = true;
+    // Hide topic picker after reset
+    if (topicPicker) topicPicker.classList.remove('visible');
     showMsg(msg, 'success', "You're subscribed! You'll receive your first email when the next significant release drops.");
   });
 }

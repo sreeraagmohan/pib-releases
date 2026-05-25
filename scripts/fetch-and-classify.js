@@ -65,6 +65,7 @@ async function main() {
       score: result.score,
       category: result.category,
       headline: result.headline,
+      topics: result.topics || [],
     });
 
     if (error) { console.error('DB error:', error.message); continue; }
@@ -94,8 +95,15 @@ Score 1–10. Score 7+ if it involves:
 - G20, SCO, BRICS, UN, WTO multilateral outcomes
 - Anything likely front-page tomorrow
 
+Also tag every topic bucket that applies (can be multiple, can be empty):
+- "foreign_relations": bilateral/multilateral meetings, MEA releases, treaties, summits, diplomatic incidents
+- "science_tech": ISRO, space, biotech, IT ministry, AI policy, DST, nuclear energy, tech policy
+- "defence": MoD, military exercises, DRDO, arms procurement, border security, Coast Guard
+- "pm_modi": directly involves PM Modi — his meetings, visits, statements, inaugurations
+- "economics": MoC, MOSPI data releases, trade/export/import figures, RBI, SEBI, tariffs, commerce, industrial output
+
 Return ONLY valid JSON, no markdown:
-{"score":<1-10>,"category":"<foreign_policy|economic|defense|domestic|diplomatic|trade>","headline":"<one crisp sentence why it matters; empty string if score<7>"}`;
+{"score":<1-10>,"category":"<foreign_policy|economic|defense|domestic|diplomatic|trade>","headline":"<one crisp sentence why it matters; empty string if score<7>","topics":["topic1","topic2"]}`;
 
   try {
     const msg = await Promise.race([

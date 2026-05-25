@@ -128,4 +128,59 @@ function digestHtml({ dateLabel, bullets, topArticles, unsubscribeUrl }) {
 </body></html>`;
 }
 
-module.exports = { sendEmail, breakingAlertHtml, digestHtml };
+function topicDigestHtml({ dateLabel, topicNames, bullets, topArticles, unsubscribeUrl }) {
+  const bulletRows = bullets
+    .filter(b => b.trim())
+    .map(b => b.replace(/^[•\-*]\s*/, '').trim())
+    .map(b => `
+    <tr>
+      <td style="padding:6px 0;vertical-align:top;width:18px;color:#138808;font-size:16px;font-weight:700;">•</td>
+      <td style="padding:6px 0 6px 10px;color:#1e293b;font-size:15px;line-height:1.7;">${esc(b)}</td>
+    </tr>`)
+    .join('');
+
+  const articleLinks = topArticles.slice(0, 8).map(a => `
+    <tr>
+      <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;">
+        <a href="${a.url}" style="color:#0f1117;font-size:13px;text-decoration:none;font-weight:500;">${esc(a.title)}</a>
+        <span style="display:inline-block;margin-left:8px;background:#f0fdf4;color:#166534;font-size:11px;padding:1px 7px;border-radius:4px;vertical-align:middle;">${esc((a.topics || []).join(', ') || a.category || 'general')}</span>
+      </td>
+    </tr>`).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
+<body style="margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <div style="max-width:600px;margin:32px auto;border-radius:12px;overflow:hidden;border:1px solid #2d3448;">
+
+    ${TRICOLOR}
+
+    <div style="background:#0f1117;padding:24px 28px;">
+      <p style="margin:0 0 4px;font-size:13px;color:#94a3b8;">☸ PIB Alerts</p>
+      <p style="margin:0 0 6px;color:#22c55e;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;">Topic Brief</p>
+      <h1 style="margin:0 0 8px;color:#f8fafc;font-size:20px;font-weight:700;">${esc(dateLabel)}</h1>
+      <p style="margin:0;background:rgba(34,197,94,0.12);display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;color:#22c55e;font-weight:600;">${esc(topicNames)}</p>
+    </div>
+
+    <div style="background:#ffffff;padding:24px 28px 8px;">
+      <table style="width:100%;border-collapse:collapse;">${bulletRows}</table>
+    </div>
+
+    ${topArticles.length ? `
+    <div style="background:#ffffff;padding:8px 28px 24px;">
+      <p style="margin:0 0 10px;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Source Releases</p>
+      <table style="width:100%;border-collapse:collapse;">${articleLinks}</table>
+    </div>` : ''}
+
+    <div style="padding:14px 28px;border-top:1px solid #e2e8f0;background:#f8fafc;">
+      <p style="margin:0;color:#94a3b8;font-size:12px;line-height:1.6;">
+        Press Information Bureau of India &nbsp;·&nbsp;
+        <a href="${unsubscribeUrl}" style="color:#94a3b8;">Unsubscribe from topic brief</a>
+      </p>
+    </div>
+
+  </div>
+</body></html>`;
+}
+
+module.exports = { sendEmail, breakingAlertHtml, digestHtml, topicDigestHtml };

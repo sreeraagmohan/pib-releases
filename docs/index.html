@@ -48,6 +48,25 @@
               <span>Instant email the moment a high-importance release drops (score ≥ 7/10).</span>
             </span>
           </label>
+          <label class="pref-label">
+            <input type="checkbox" name="topic_digest" id="pref-topic" />
+            <span class="pref-text">
+              <strong>Topic brief</strong>
+              <span>Daily 8 PM email filtered to your chosen topics — more analytical.</span>
+            </span>
+          </label>
+        </div>
+
+        <!-- Topic picker — revealed when Topic brief is checked -->
+        <div id="topic-picker">
+          <p class="topic-picker-label">Choose your topics</p>
+          <div class="topic-grid">
+            <label class="topic-chip"><input type="checkbox" name="topics" value="foreign_relations" /> 🌐 Foreign relations</label>
+            <label class="topic-chip"><input type="checkbox" name="topics" value="economics" /> 📊 Economics</label>
+            <label class="topic-chip"><input type="checkbox" name="topics" value="pm_modi" /> 🏛️ PM Modi</label>
+            <label class="topic-chip"><input type="checkbox" name="topics" value="defence" /> 🛡️ Defence</label>
+            <label class="topic-chip"><input type="checkbox" name="topics" value="science_tech" /> 🔬 Science &amp; tech</label>
+          </div>
         </div>
 
         <button type="submit" id="signup-submit">Subscribe</button>

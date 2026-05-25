@@ -215,9 +215,74 @@ a:hover { text-decoration: underline; }
   cursor: pointer;
 }
 
-/* Digest checkbox = saffron, breaking = green */
+/* topic pref highlighted in green when checked */
+.pref-label:has(#pref-topic:checked) {
+  border-color: var(--green-bright);
+  background: var(--green-dim);
+}
+
+/* Digest checkbox = saffron, breaking + topic = green */
 #pref-digest   { accent-color: var(--saffron); }
 #pref-breaking { accent-color: var(--green-bright); }
+#pref-topic    { accent-color: var(--green-bright); }
+
+/* ── Topic picker ────────────────────────────────────────────────────────── */
+#topic-picker {
+  display: none;
+  margin: -10px 0 18px;
+  padding: 14px 14px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  animation: fadeSlideIn 0.15s ease;
+}
+
+#topic-picker.visible { display: block; }
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.topic-picker-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.topic-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.topic-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  user-select: none;
+}
+
+.topic-chip:hover { border-color: #475569; color: var(--text); }
+
+.topic-chip:has(input:checked) {
+  border-color: var(--green-bright);
+  background: var(--green-dim);
+  color: var(--green-bright);
+}
+
+.topic-chip input[type="checkbox"] { display: none; }
 
 .pref-text strong {
   display: block;
