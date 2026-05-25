@@ -16,6 +16,14 @@ function setupSignupForm() {
   const form = document.getElementById('signup-form');
   if (!form) return;
 
+  const emailInput = document.getElementById('email');
+  const btn = document.getElementById('signup-submit');
+
+  // Enable submit only when email field has a value
+  emailInput.addEventListener('input', () => {
+    btn.disabled = !emailInput.value.trim();
+  });
+
   // Toggle topic picker visibility when topic brief checkbox changes
   const topicToggle = document.getElementById('pref-topic');
   const topicPicker = document.getElementById('topic-picker');
@@ -28,14 +36,13 @@ function setupSignupForm() {
   form.addEventListener('submit', async e => {
     e.preventDefault();
 
-    const email = document.getElementById('email').value.trim().toLowerCase();
+    const email = emailInput.value.trim().toLowerCase();
     const digest = document.getElementById('pref-digest').checked;
     const breaking = document.getElementById('pref-breaking').checked;
     const topicDigest = document.getElementById('pref-topic').checked;
     const topics = topicDigest
       ? [...document.querySelectorAll('input[name="topics"]:checked')].map(el => el.value)
       : [];
-    const btn = document.getElementById('signup-submit');
     const msg = document.getElementById('signup-msg');
 
     if (!email) return;
@@ -53,33 +60,52 @@ function setupSignupForm() {
     msg.className = 'msg';
     msg.style.display = 'none';
 
-    const { error } = await db.from('subscribers').insert({
-      email,
-      digest,
-      breaking_alerts: breaking,
-      topic_digest: topicDigest,
-      topics,
-    });
+    // Check if this email is already in the system
+    const { data: existing } = await db
+      .from('subscribers')
+      .select('digest, breaking_alerts, topic_digest, topics')
+      .eq('email', email)
+      .maybeSingle();
 
-    btn.disabled = false;
+    let error;
+
+    if (existing) {
+      // Merge preferences — never turn off something already enabled
+      const mergedTopics = [...new Set([...(existing.topics || []), ...topics])];
+      ({ error } = await db.from('subscribers').update({
+        digest:           existing.digest           || digest,
+        breaking_alerts:  existing.breaking_alerts  || breaking,
+        topic_digest:     existing.topic_digest     || topicDigest,
+        topics:           mergedTopics,
+      }).eq('email', email));
+    } else {
+      ({ error } = await db.from('subscribers').insert({
+        email,
+        digest,
+        breaking_alerts: breaking,
+        topic_digest:    topicDigest,
+        topics,
+      }));
+    }
+
+    btn.disabled = !emailInput.value.trim();
     btn.textContent = 'Subscribe';
 
     if (error) {
-      if (error.code === '23505') {
-        // Unique violation — already subscribed
-        showMsg(msg, 'success', "You're already subscribed. Check your inbox for a previous confirmation.");
-      } else {
-        showMsg(msg, 'error', 'Something went wrong. Please try again in a moment.');
-        console.error(error);
-      }
+      showMsg(msg, 'error', 'Something went wrong. Please try again in a moment.');
+      console.error(error);
       return;
     }
 
     form.reset();
+    btn.disabled = true; // reset disables the button (email is empty again)
     document.getElementById('pref-digest').checked = true;
-    // Hide topic picker after reset
     if (topicPicker) topicPicker.classList.remove('visible');
-    showMsg(msg, 'success', "You're subscribed! You'll receive your first email when the next significant release drops.");
+
+    const successMsg = existing
+      ? "Preferences updated! Your new subscriptions will kick in from the next send."
+      : "You're subscribed! You'll receive your first email when the next significant release drops.";
+    showMsg(msg, 'success', successMsg);
   });
 }
 
